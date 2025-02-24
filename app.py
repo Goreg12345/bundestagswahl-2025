@@ -6,6 +6,7 @@ from utils.data_loader import load_geojson, process_geojson
 from components.map import create_wahlkreis_map
 from components.results import display_wahlkreis_info
 from components.legal import show_imprint, show_privacy
+from components.overview import create_overview
 
 # Page config
 st.set_page_config(
@@ -15,16 +16,22 @@ st.set_page_config(
 )
 st.title("Bundestagswahl 2025")
 
+# Add overview section
+create_overview()
+
+# Add separator
+st.markdown("---")
+
 # Load and process data
 geojson_str = load_geojson()
-geojson_data = json.loads(geojson_str)  # Parse JSON once
-df = process_geojson(geojson_str)  # Pass the string, not the parsed data
+geojson_data = json.loads(geojson_str)
+df = process_geojson(geojson_str)
 
 # Initialize session state
 if 'selected_wahlkreis' not in st.session_state:
     st.session_state.selected_wahlkreis = None
 
-# Create layout
+# Create layout for map and details
 col1, col2 = st.columns(2)
 
 # Create and display map

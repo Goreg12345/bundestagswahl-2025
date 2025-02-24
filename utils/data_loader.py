@@ -38,7 +38,7 @@ def load_election_results():
 def get_first_votes():
     """Get first votes (Erststimmen) results by party"""
     results = load_election_results()
-    return results[(results.Stimme == 1) & (results.Gruppenart=='Partei')]
+    return results[(results.Stimme == 1) & (results.Gruppenart.isin(['Partei', 'Einzelbewerber/Wählergruppe' ]))]
 
 @st.cache_data
 def get_second_votes():
