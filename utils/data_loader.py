@@ -45,3 +45,7 @@ def get_second_votes():
     """Get second votes (Zweitstimmen) results by party"""
     results = load_election_results()
     return results[(results.Stimme == 2) & (results.Gruppenart=='Partei')]
+    
+@st.cache_data
+def load_candidates():
+    return pd.read_csv('results/btw25_bewerb_utf8.csv', delimiter=';', encoding='utf-8', skiprows=8)

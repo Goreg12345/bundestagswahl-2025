@@ -1,8 +1,8 @@
 import streamlit as st
-from utils.data_loader import get_first_votes, get_second_votes
+from utils.data_loader import get_first_votes, get_second_votes, load_candidates
 import plotly.express as px
 from components.map import party_to_color
-
+import pandas as pd
 def create_votes_plot(votes_data, show_percentage, title):
     """Create a bar plot for vote data"""
     # Get top 8 parties by votes
@@ -28,9 +28,10 @@ def create_votes_plot(votes_data, show_percentage, title):
         text_values = top_8_votes['Anzahl'].apply(lambda x: f'{x:,.0f}'.replace(',', '.'))
 
     # Create figure
+    label = 'label' if 'label' in top_8_votes.columns else 'Gruppenname'
     fig = px.bar(
         top_8_votes,
-        x='Gruppenname',
+        x=label,
         y=y_col,
         color='Gruppenname',
         color_discrete_map=party_to_color,
@@ -75,6 +76,13 @@ def display_wahlkreis_info(df_map, selected_points):
     selected_wkr_name = selected_row['WKR_NAME']
     
     st.session_state.selected_wahlkreis = selected_wkr_nr
+
+    # Load candidates data
+    candidates = load_candidates()
+
+    # Filter candidates by WKR_NR
+    candidates_wkr = candidates[(candidates['Gebietsnummer'] == selected_wkr_nr) & 
+                                (candidates['Kennzeichen'].isin(['Kreiswahlvorschlag','anderer Kreiswahlvorschlag']))]
     
     st.subheader(f"Wahlkreis {selected_wkr_nr}: {selected_wkr_name}")
     st.write(f"Gewinner: {winner_color}")
@@ -96,7 +104,14 @@ def display_wahlkreis_info(df_map, selected_points):
         )
 
     # Select correct vote data based on radio selection
-    votes = first_votes if vote_type == "Erststimmen" else second_votes
+    if vote_type == "Erststimmen":
+        votes = first_votes
+        # merge with candidates data
+        candidates_wkr = candidates_wkr[['GruppennameKurz', 'Rufname', 'Nachname']]
+        votes = pd.merge(votes, candidates_wkr, left_on='Gruppenname', right_on='GruppennameKurz', how='left')
+        votes['label'] = votes['Rufname'] + ' ' + votes['Nachname'] + ' (' + votes['Gruppenname'] + ')'
+    else:
+        votes = second_votes
     
     # filter by wkr_nr and sort by votes
     wkr_votes = votes[votes['Gebietsnummer'] == selected_wkr_nr].sort_values('Anzahl', ascending=False)
