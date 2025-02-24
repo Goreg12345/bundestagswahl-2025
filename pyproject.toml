@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "bundestagswahl-2025"
+version = "0.1.0"
+description = "Bundestagswahl 2025"
+authors = ["Georg Lange <mail@georglange.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit = "^1.32.0"
+pandas = "^2.2.0"
+matplotlib = "^3.8.0"
+seaborn = "^0.13.0"
+geopandas = "^0.14.3"
+altair = "^5.2.0"
+plotly = "^5.22.0"
+streamlit-plotly-events = "^0.0.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api" 
