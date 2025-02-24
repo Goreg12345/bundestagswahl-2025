@@ -3,6 +3,8 @@ from utils.data_loader import get_first_votes, get_second_votes, load_candidates
 import plotly.express as px
 from components.map import party_to_color
 import pandas as pd
+
+
 def create_votes_plot(votes_data, show_percentage, title):
     """Create a bar plot for vote data"""
     # Get top 8 parties by votes
@@ -59,7 +61,6 @@ def create_votes_plot(votes_data, show_percentage, title):
 def display_wahlkreis_info(df_map, selected_points):
     """Display information for selected Wahlkreis"""
     if not selected_points:
-        st.title("Wahlkreisergebnisse")
         st.info("💡 Tipp: Klicken Sie auf einen Wahlkreis in der Karte, um detaillierte Ergebnisse anzuzeigen.")
         return
         

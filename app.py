@@ -7,6 +7,7 @@ from components.map import create_wahlkreis_map
 from components.results import display_wahlkreis_info
 from components.legal import show_imprint, show_privacy
 from components.overview import create_overview
+from components.direct_candidates_vs_seats import create_direct_vs_total
 
 # Page config
 st.set_page_config(
@@ -32,6 +33,8 @@ if 'selected_wahlkreis' not in st.session_state:
     st.session_state.selected_wahlkreis = None
 
 # Create layout for map and details
+st.title("Wahlkreisergebnisse")
+
 col1, col2 = st.columns(2)
 
 # Create and display map
@@ -42,6 +45,13 @@ with col1:
 # Display results
 with col2:
     display_wahlkreis_info(df_map, selected_points)
+
+# Add separator
+st.markdown("---")
+
+# Add direct vs total seats comparison
+st.subheader("Vergleich: Direktmandate und Gesamtsitze")
+create_direct_vs_total()
 
 # Footer with legal info
 st.markdown("---")
